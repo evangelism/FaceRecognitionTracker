@@ -31,18 +31,18 @@
 
 Для начала создаем в облаке свой IoT Hub (раздел "Интернет вещей"). После создания хаба скопируйте строку подключения:
 
-![Get Access Key](https://github.com/evangelism/DevCon-2016/tree/master/IoT%20intensive/images/IoTHub_AccessKeys.PNG)
+![Get Access Key](../images/IoTHub_AccessKeys.PNG)
 
 ### Подключаемся к IoT-хабу и создаем строку подключения для устройства
 
 Используйте и установите [Device Explorer](https://github.com/Azure/azure-iot-sdks/blob/master/tools/DeviceExplorer/doc/how_to_use_device_explorer.md). В нем введите
 строку подключения к IoT-хабу:
 
-![Device Explorer 1](https://github.com/evangelism/DevCon-2016/tree/master/IoT%20intensive/images/DeviceExplorer1.PNG)
+![Device Explorer 1](../images/DeviceExplorer1.PNG)
 
 После этого перейдите на вкладку "Management" и добавьте новое устройство. Затем правой кнопкой нажмите на строку с устройством и выберите "Copy Connection String".
 
-![Device Explorer 2](https://github.com/evangelism/DevCon-2016/tree/master/IoT%20intensive/images/DeviceExplorer2.PNG)
+![Device Explorer 2](../images/DeviceExplorer2.PNG)
 
 ## Получаем код для работы с IoT-хабом
 
@@ -122,4 +122,4 @@ GROUP BY Id,[Table],No,TumblingWindow(Duration(second,5))
 
 После того, как Stream Analytics будет запущено, вы должны увидеть в панели PowerBI доступные данные:
 
-![PowerBI](https://github.com/evangelism/DevCon-2016/tree/master/IoT%20intensive/images/PowerBI.PNG)
+![PowerBI](../images/PowerBI.PNG)
