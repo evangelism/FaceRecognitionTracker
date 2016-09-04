@@ -1,10 +1,12 @@
-﻿using Microsoft.ProjectOxford.Emotion;
+﻿using Microsoft.Azure.Devices.Client;
+using Microsoft.ProjectOxford.Emotion;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
+using System.Text;
 using System.Threading.Tasks;
 using Windows.Devices.Enumeration;
 using Windows.Foundation;
@@ -40,6 +42,8 @@ namespace FaceRecognitionTracker
 
         bool IsFacePresent = false;
 
+        DeviceClient iothub;
+
         public MainPage()
         {
             this.InitializeComponent();
@@ -49,6 +53,8 @@ namespace FaceRecognitionTracker
         {
             base.OnNavigatedTo(e);
             await Init();
+            iothub = DeviceClient.CreateFromConnectionString(Config.DeviceConnectionString);
+            await iothub.OpenAsync();
             dt.Tick += GetEmotions;
             dt.Start();
         }
@@ -126,6 +132,8 @@ namespace FaceRecognitionTracker
                 var Face = Emo[0];
                 var s = JsonConvert.SerializeObject(Face.Scores);
                 System.Diagnostics.Debug.WriteLine(s);
+                var b = Encoding.UTF8.GetBytes(s);
+                await iothub.SendEventAsync(new Message(b));
             }
             dt.Start();
         }

@@ -1,5 +1,6 @@
 ﻿{
   "dependencies": {
+    "Microsoft.Azure.Devices.Client": "1.0.18",
     "Microsoft.NETCore.UniversalWindowsPlatform": "5.2.2",
     "Microsoft.ProjectOxford.Emotion": "1.0.326"
   },
