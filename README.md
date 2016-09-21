@@ -103,15 +103,23 @@ branch *MicrosoftBuzzwordDaySolution*, содержащюю готовое решение по отсылке дан
 ¬ качестве выходных данных - Power BI, назовЄм их `OutBI`. 
 ќбратите внимание, что в текущей версии портала Azure дл€ конфигурировани€ PowerBI необходимо использовать старый портал http://manage.windowsazure.com.
 
+¬ качестве простейшего запроса можно оставить исходный запрос, поставив правильные названи€ источника и приемника данных:
+
+```
+SELECT * INTO [OutBI] FROM [InHub]
+```
+
 ƒл€ усреднени€ данных за 5 секунд используем такой запрос:
 
 ```
 SELECT
-    Id, AVG(Temperature) as Temp, [Table], No, 
+    AVG(Happiness) as AVHappiness,
+    AVG(Surprise) as AVSurpive,
+    ...
     MAX(Time) as EndTime, MIN(Time) as BeginTime
 INTO [OutBI]
 FROM [InHub] TIMESTAMP BY Time
-GROUP BY Id,[Table],No,TumblingWindow(Duration(second,5))
+GROUP BY TumblingWindow(Duration(second,5))
 ```
 
 ¬ам может пригодитс€ [прекрасный документ с набором примеров запросов](https://azure.microsoft.com/en-us/documentation/articles/stream-analytics-stream-analytics-query-patterns/).
