@@ -1,14 +1,10 @@
 ﻿using Microsoft.ProjectOxford.Emotion;
 using Newtonsoft.Json;
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
 using System.Threading.Tasks;
 using Windows.Devices.Enumeration;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
 using Windows.Media.Capture;
 using Windows.Media.Core;
 using Windows.Media.FaceAnalysis;
@@ -16,21 +12,22 @@ using Windows.Media.MediaProperties;
 using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Data;
-using Windows.UI.Xaml.Input;
-using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 
-// Документацию по шаблону элемента "Пустая страница" см. по адресу http://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x409
+// Это приложение получает ваше изображение с веб-камеры и
+// распознаёт эмоции на нём, обращаясь к Cognitive Services
+// Предварительно с помощью Windows UWP API анализируется, есть
+// ли на фотографии лицо.
+
+// Эмоции затем сериализуются в формат JSON. Они становятся доступны
+// в строке, помеченной TODO:
 
 namespace FaceRecognitionTracker
 {
-    /// <summary>
-    /// Пустая страница, которую можно использовать саму по себе или для перехода внутри фрейма.
-    /// </summary>
     public sealed partial class MainPage : Page
     {
+
+        #region Variables
         MediaCapture MC;
         DispatcherTimer dt = new DispatcherTimer() { Interval = TimeSpan.FromSeconds(3) };
         EmotionServiceClient Oxford = new EmotionServiceClient(Config.OxfordAPIKey);
@@ -40,11 +37,16 @@ namespace FaceRecognitionTracker
 
         bool IsFacePresent = false;
 
+        #endregion
+
         public MainPage()
         {
             this.InitializeComponent();
         }
 
+        /// <summary>
+        /// Первоначальная инициализация страницы
+        /// </summary>
         protected async override void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
@@ -53,6 +55,9 @@ namespace FaceRecognitionTracker
             dt.Start();
         }
 
+        /// <summary>
+        /// Инициализирует работу с камерой и с локальным распознавателем лиц
+        /// </summary>
         private async Task Init()
         {
             MC = new MediaCapture();
@@ -76,11 +81,20 @@ namespace FaceRecognitionTracker
             VideoProps = props as VideoEncodingProperties;
         }
 
+        /// <summary>
+        /// Срабатывает при локальном обнаружении лица на фотографии.
+        /// Рисует рамку и устанавливает переменную IsFacePresent=true
+        /// </summary>
         private async void FaceDetectedEvent(FaceDetectionEffect sender, FaceDetectedEventArgs args)
         {
             await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => HighlightDetectedFace(args.ResultFrame.DetectedFaces.FirstOrDefault()));
         }
 
+        /// <summary>
+        /// Отвечает за рисование прямоугольника вокруг лица
+        /// </summary>
+        /// <param name="face">Обнаруженное лицо</param>
+        /// <returns></returns>
         private async Task HighlightDetectedFace(DetectedFace face)
         {
             var cx = ViewFinder.ActualWidth / VideoProps.Width;
@@ -101,33 +115,38 @@ namespace FaceRecognitionTracker
             }
         }
 
+        /// <summary>
+        /// Основная функция, срабатывающая по таймеру
+        /// Распознаёт эмоции
+        /// </summary>
         async void GetEmotions(object sender, object e)
         {
             if (!IsFacePresent) return;
-            dt.Stop();
+            dt.Stop(); 
             var ms = new MemoryStream();
             try
             {
+                // Запоминаем фотографию в поток в памяти
                 await MC.CapturePhotoToStreamAsync(ImageEncodingProperties.CreateJpeg(), ms.AsRandomAccessStream());
             }
-            catch
-            {
-                dt.Start();
-                return;
-            }
+            catch { dt.Start(); return; }
+
             ms.Position = 0L;
-            var ms1 = new MemoryStream();
-            ms.CopyTo(ms1);
-            ms.Position = 0L;
-            ms1.Position = 0L;
-            var Emo = await Oxford.RecognizeAsync(ms);
+            var Emo = await Oxford.RecognizeAsync(ms); 
+            // ^^^ основной вызов распознавателя эмоций
             if (Emo != null && Emo.Length > 0)
+            // если обнаружено одно и более лицо
             {
-                var Face = Emo[0];
+                var Face = Emo[0]; // берем первое (нулевое) лицо
+                // Face.Scores - запись с различными эмоциями (Fear,Surprise,...)
+                // Сериализуем в JSON
                 var s = JsonConvert.SerializeObject(Face.Scores);
+
+                // TODO: Здесь мы можем делать что хотим с сериализованной строкой
+                // Например, печатать:
                 System.Diagnostics.Debug.WriteLine(s);
             }
-            dt.Start();
+            dt.Start(); // перезапускаем таймер
         }
     }
 }
