@@ -11,7 +11,9 @@
 
 1. Если вы используете командную строку - клонируйте репозиторий в какое-нибудь удобное место:
 
-``` git clone https://github.com/evangelism/FaceRecognitionTracker
+``` 
+git clone https://github.com/evangelism/FaceRecognitionTracker
+```
 
 Если вы не пользуетесь git, вы можете скачать ZIP-версию исходного кода и затем развернуть её в любую директорию вручную.
 
