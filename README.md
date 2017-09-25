@@ -37,7 +37,7 @@ git clone https://github.com/evangelism/FaceRecognitionTracker
 
 ### Подключаемся к IoT-хабу и создаем строку подключения для устройства
 
-Используйте и установите [Device Explorer](https://github.com/Azure/azure-iot-sdks/blob/master/tools/DeviceExplorer/doc/how_to_use_device_explorer.md). В нем введите
+Используйте и установите [Device Explorer](https://github.com/Azure/azure-iot-sdk-csharp/releases). В нем введите
 строку подключения к IoT-хабу:
 
 ![Device Explorer 1](images/DeviceExplorer1.PNG)
@@ -49,12 +49,15 @@ git clone https://github.com/evangelism/FaceRecognitionTracker
 ## Получаем код для работы с IoT-хабом
 
 Очень хорошая страничка [Getting Started](https://azure.microsoft.com/ru-ru/develop/iot/get-started/) есть в MSDN. 
-Выбираете своё устройство, язык программирования и т.д. - и получаете фрагмент кода.
+Выбираете своё устройство, язык программирования и т.д. - и получаете фрагмент кода. 
 
 В нашем случае выбираем Raspberry Pi 2 -> Windows -> C#. (Код для Raspberry Pi подойдет и для настольного UWP-приложения). 
 При добавлении кода в проект, необходимо также добавить ссылку на NuGet-пакет
 `Microsoft.Azure.Devices.Client`. В полученном коде не забудьте исправить строку подключения на ту, 
 которая была получена на предыдущем шаге.
+
+[На этой страничке](https://azure.microsoft.com/en-us/resources/samples/?service=iot-hub&sort=0)
+приводится много примеров готовых приложений, использующих IoT Hub.
 
 ### Отправка данных в IoT Hub
 
